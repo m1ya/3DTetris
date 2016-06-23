@@ -5,10 +5,10 @@ public class MoveScript : MonoBehaviour {
 
     //床や壁、ブロックに接触したかの判定
     public bool downflag;
-    public bool rightflag;
-    public bool leftflag;
-    public bool forwardflag;
-    public bool backflag;
+    public int rightflag;
+    public int leftflag;
+    public int forwardflag;
+    public int backflag;
 
     //フィールド外にいたら立てる
     public bool outflag;
@@ -18,8 +18,7 @@ public class MoveScript : MonoBehaviour {
 
     //ブロック落下の時間・速度管理
     public float timekeeper;
-    float timer;
-    int fallspeed;
+    public float timer;
 
     //床に着いたときにブロックを生成したかどうかの判定
     bool geneflag = false;
@@ -32,16 +31,15 @@ public class MoveScript : MonoBehaviour {
 
         //接触フラグの初期化
         downflag = false;
-        rightflag = false;
-        leftflag = false;
-        forwardflag = false;
-        backflag = false;
+        rightflag = 0;
+        leftflag = 0;
+        forwardflag = 0;
+        backflag = 0;
 
         //機能停止フラグの初期化
         stopflag = false;
 
         //落下速度の初期化
-        fallspeed = 1;
         timer = 1;
 
         //フィールド外フラグの初期化
@@ -61,7 +59,7 @@ public class MoveScript : MonoBehaviour {
             timekeeper += Time.deltaTime;
             if (timekeeper >= timer)
             {
-                transform.position += Vector3.down * fallspeed;
+                transform.position += Vector3.down;
                 timekeeper = 0;
             }
         }
@@ -78,60 +76,36 @@ public class MoveScript : MonoBehaviour {
             if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
                 //左側に何もなければ
-                if (leftflag == false)
+                if (leftflag == 0)
                 {
                     transform.position += Vector3.left;
-
-                    //もし右になにかあったならば
-                    if(rightflag == true)
-                    {
-                        rightflag = false;
-                    }
                 }
             }
 
             if (Input.GetKeyDown(KeyCode.RightArrow))
             {
                 //右側に何もなければ
-                if (rightflag == false)
+                if (rightflag == 0)
                 {
                     transform.position += Vector3.right;
-                }
-
-                //もし左になにかあったならば
-                if (leftflag == true)
-                {
-                    leftflag = false;
                 }
             }
 
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
                 //前側に何もなければ
-                if (forwardflag == false)
+                if (forwardflag == 0)
                 {
                     transform.position += Vector3.forward;
-                }
-
-                //もし後ろになにかあったならば
-                if (backflag == true)
-                {
-                    backflag = false;
                 }
             }
 
             if (Input.GetKeyDown(KeyCode.DownArrow))
             {
                 //後側に何もなければ
-                if (backflag == false)
+                if (backflag == 0)
                 {
                     transform.position += Vector3.back;
-                }
-
-                //もし前になにかあったならば
-                if (forwardflag == true)
-                {
-                    forwardflag = false;
                 }
             }
 
