@@ -31,7 +31,7 @@ public class BlockGeneratorScript : MonoBehaviour {
             geneflag = false;
 
             //ランダムにブロックを生成する
-            random = 2;//Random.Range(1, 7);
+            random = Random.Range(1, 7);
             switch (random)
             {
                 case 1:

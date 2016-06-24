@@ -12,6 +12,10 @@ public class BlockScript : MonoBehaviour {
     //消えた際の処理
     bool Down;
 
+    //座標を既に書き換えたかどうかの判定
+    bool positionflag;
+    bool posflag;
+
     //ブロックの座標を保管する。
     Vector3 position;
 
@@ -33,6 +37,10 @@ public class BlockScript : MonoBehaviour {
         //消える際の処理
         Down = false;
 
+        //座標を書き換えたかどうかの判定の初期化
+        positionflag = false;
+        posflag = false;
+
         //親オブジェクト、スクリプトを取得する。
         Parent = transform.root.gameObject;
         ms = Parent.GetComponent<MoveScript>();
@@ -44,11 +52,19 @@ public class BlockScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+        if (posflag == false)
+        {
+            ms.posflag++;
+            posflag = true;
+        }
+
         //親が止まっていたら自分も止まる
-        if (ms.stopflag == true)
+        if (ms.stopflag == true && positionflag == false)
         {
             //自分の座標の配列の中身を書き換える。
-            GameManagerScript.field[(int)position.x, (int)position.y, (int)position.z] = 1;
+            GameManagerScript.field[Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.y), Mathf.RoundToInt(position.z)] = 1;
+            positionflag = true;
+            ms.posflag--;
         }
 
         //格納されている座標と現在の座標が違ったら
@@ -69,7 +85,7 @@ public class BlockScript : MonoBehaviour {
             }
 
             //一つ左のマスに壁又はブロックがあった場合
-            if (GameManagerScript.field[(int)position.x - 1, (int)position.y, (int)position.z] >= 1)
+            if (GameManagerScript.field[Mathf.RoundToInt(position.x) - 1, Mathf.RoundToInt(position.y), Mathf.RoundToInt(position.z)] >= 1)
             {
             if (leftflag == false)
             {
@@ -84,7 +100,7 @@ public class BlockScript : MonoBehaviour {
         }
 
             //一つ右のマスに壁又はブロックがあった場合
-            if (GameManagerScript.field[(int)position.x + 1, (int)position.y, (int)position.z] >= 1)
+            if (GameManagerScript.field[Mathf.RoundToInt(position.x) + 1, Mathf.RoundToInt(position.y), Mathf.RoundToInt(position.z)] >= 1)
             {
             if (rightflag == false)
             {
@@ -99,7 +115,7 @@ public class BlockScript : MonoBehaviour {
         }
 
             //一つ前のマスに壁又はブロックがあった場合
-            if (GameManagerScript.field[(int)position.x, (int)position.y, (int)position.z - 1] >= 1)
+            if (GameManagerScript.field[Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.y), Mathf.RoundToInt(position.z) - 1] >= 1)
             {
             if (backflag == false)
             {
@@ -114,7 +130,7 @@ public class BlockScript : MonoBehaviour {
         }
 
             //一つ後のマスに壁又はブロックがあった場合
-            if (GameManagerScript.field[(int)position.x, (int)position.y, (int)position.z + 1] >= 1)
+            if (GameManagerScript.field[Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.y), Mathf.RoundToInt(position.z) + 1] >= 1)
             {
             if (forwardflag == false)
             {
@@ -129,7 +145,7 @@ public class BlockScript : MonoBehaviour {
         }
 
             //一つ下のマスに床又はブロックがあった場合
-            if (GameManagerScript.field[(int)position.x, (int)position.y - 1, (int)position.z] >= 1)
+            if (GameManagerScript.field[Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.y) - 1, Mathf.RoundToInt(position.z)] >= 1)
             {
                 //親オブジェクトの落下をストップ
                 ms.downflag = true;
@@ -141,14 +157,19 @@ public class BlockScript : MonoBehaviour {
 
     void Stop()
     {
-        if (GameManagerScript.field[(int)position.x, (int)position.y - 1, (int)position.z] >= 1)
+        if (GameManagerScript.field[Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.y) - 1, Mathf.RoundToInt(position.z)] >= 1)
         {
             //操作不能にする
             ms.stopflag = true;
             //Debug.Log("Under is " + position.x + "," + (position.y - 1) + "," + position.z + " " + GameManagerScript.field[(int)position.x, (int)position.y - 1, (int)position.z]);
 
             //自分の座標の配列の中身を書き換える。
-            GameManagerScript.field[(int)position.x, (int)position.y, (int)position.z] = 1;
+            if (positionflag == false)
+            {
+                GameManagerScript.field[Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.y), Mathf.RoundToInt(position.z)] = 1;
+                positionflag = true;
+                ms.posflag--;
+            }
         }
         else
         {
@@ -162,9 +183,8 @@ public class BlockScript : MonoBehaviour {
     {
         if (Down == true)
         {
-            //列消滅に際する処理
+            //列消滅時に一列さげる
             transform.position += Vector3.down;
-            GameManagerScript.field[(int)position.x, (int)position.y, (int)position.z] = 1;
             Down = false;
         }
      }

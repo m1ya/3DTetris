@@ -13,12 +13,18 @@ public class GameManagerScript : MonoBehaviour
     //壁を2、止まっているブロックを1として配列で座標を管理する
     public static int[,,] field;
     int LineChecker = 0;
+
+    //列削除用オブジェクト
     public GameObject DeleteCube;
     public GameObject DownCube;
 
     //列削除用のメモ領域
     public static int[,,] memorise;
     bool deleteflag;
+
+    //BGM
+    public AudioSource bgmSource;
+    public AudioSource vanishSource;
 
     // Use this for initialization
     void Start()
@@ -90,7 +96,6 @@ public class GameManagerScript : MonoBehaviour
                     if (LineChecker == 10)
                     {                 
                         memorise[i, j, 0] = 1;
-                        Debug.Log("!!!!!memorise " + i + "," + j + "," + "0 " + memorise[i, j, 0]);
                         deleteflag = true;
                     }
                 }
@@ -115,7 +120,6 @@ public class GameManagerScript : MonoBehaviour
                     if (LineChecker == 10)
                     {
                         memorise[0, j, i] = 1;
-                        Debug.Log("!!!!!memorise " + "0" + "," + j + "," + i + " " + memorise[0, j, i]);
                         deleteflag = true;
                     }
                 }
@@ -142,6 +146,7 @@ public class GameManagerScript : MonoBehaviour
                     if (memorise[i, j, k] == 1)
                     {
                         Delete(i, j, k);
+                        //vanishSource.Play();
                     }
                 }
             }
@@ -155,13 +160,12 @@ public class GameManagerScript : MonoBehaviour
                 {
                     if (memorise[i, j, k] == 1)
                     {
-                        Down(i, j, k);
                         memorise[i, j, k] = 0;
+                        Down(i, j, k);
                     }
                 }
             }
         }
-
     }
 
     //列がそろったら消える処理
@@ -188,18 +192,26 @@ public class GameManagerScript : MonoBehaviour
     {
         for (int i = 1; i < 11; i++)
         {
-            for (int j = 1; j < 21; j++)
+            for (int j = y+1; j < 21; j++)
             {
-                if (j != y)
-                {
-                    if (x == 0)
+                 if (x == 0)
+                 {
+                    Instantiate(DownCube, new Vector3(i, j, z), transform.rotation);
+                    field[i, j - 1, z] = field[i, j, z];
+                    if(j == 20)
                     {
-                        Instantiate(DownCube, new Vector3(i, j, z), transform.rotation);
+                        field[i, j, z] = 0;
                     }
 
-                    if (z == 0)
+                  }
+
+                 if (z == 0)
+                 {
+                    Instantiate(DownCube, new Vector3(x, j, i), transform.rotation);
+                    field[x, j - 1, i] = field[x, j - 1, i];
+                    if (j == 20)
                     {
-                        Instantiate(DownCube, new Vector3(x, j, i), transform.rotation);
+                        field[i, j, z] = 0;
                     }
                 }
             }

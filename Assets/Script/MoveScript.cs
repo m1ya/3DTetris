@@ -16,6 +16,9 @@ public class MoveScript : MonoBehaviour {
     //機能停止のフラグ
     public bool stopflag;
 
+    //座標を書き換えたか否かの判定
+    public int posflag = 0;
+
     //ブロック落下の時間・速度管理
     public float timekeeper;
     public float timer;
@@ -132,11 +135,14 @@ public class MoveScript : MonoBehaviour {
         }
         else if(geneflag == false)
         {
-            geneflag = true;
-            BlockGeneratorScript.geneflag = true;
+            if (posflag == 0)
+            {
+                geneflag = true;
+                BlockGeneratorScript.geneflag = true;
 
-            //揃っている列がないかチェックする
-            gamemanager.SendMessage("LineCheck");
+                //揃っている列がないかチェックする
+                gamemanager.SendMessage("LineCheck");
+            }
         }
     }
 
