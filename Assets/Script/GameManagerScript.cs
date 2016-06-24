@@ -18,6 +18,7 @@ public class GameManagerScript : MonoBehaviour
 
     //列削除用のメモ領域
     public static int[,,] memorise;
+    bool deleteflag;
 
     // Use this for initialization
     void Start()
@@ -25,6 +26,8 @@ public class GameManagerScript : MonoBehaviour
 
         field = new int[12, 22, 12];
         memorise = new int[12, 22, 12];
+
+        deleteflag = false;
 
         for (int i = 0; i < field.GetLength(1); i++)
         {
@@ -78,7 +81,6 @@ public class GameManagerScript : MonoBehaviour
 
                 for (int k = 1; k < (field.GetLength(2) - 1); k++)
                 {
-
                     if (field[i, j, k] == 0)
                     {
                         break;
@@ -88,7 +90,8 @@ public class GameManagerScript : MonoBehaviour
                     if (LineChecker == 10)
                     {                 
                         memorise[i, j, 0] = 1;
-                        Debug.Log("memorise " + i + "," + j + "," + "0 " + memorise[i, j, 0]);
+                        Debug.Log("!!!!!memorise " + i + "," + j + "," + "0 " + memorise[i, j, 0]);
+                        deleteflag = true;
                     }
                 }
             }
@@ -112,41 +115,46 @@ public class GameManagerScript : MonoBehaviour
                     if (LineChecker == 10)
                     {
                         memorise[0, j, i] = 1;
-                        Debug.Log("memorise " + "0" + "," + j + "," + i + " " + memorise[0, j, i]);
+                        Debug.Log("!!!!!memorise " + "0" + "," + j + "," + i + " " + memorise[0, j, i]);
+                        deleteflag = true;
                     }
                 }
             }
         }
 
-        StepDelete();
+        if (deleteflag == true)
+        {
+            StepDelete();
+            deleteflag = false;
+        }
     }
 
     void StepDelete()
     {
-        for (int i = 1; i < (field.GetLength(2) - 1); i++)
+        Debug.Log("Search Line");
+
+        for (int i = 0; i < (field.GetLength(2) - 1); i++)
         {
             for (int j = 1; j < field.GetLength(1) - 1; j++)
             {
-                for (int k = 1; k < (field.GetLength(0) - 1); k++)
+                for (int k = 0; k < (field.GetLength(0) - 1); k++)
                 {
                     if (memorise[i, j, k] == 1)
                     {
-                        Debug.Log("Delete");
                         Delete(i, j, k);
                     }
                 }
             }
         }
 
-        for (int i = 1; i < (field.GetLength(2) - 1); i++)
+        for (int i = 0; i < (field.GetLength(2) - 1); i++)
         {
             for (int j = 1; j < field.GetLength(1) - 1; j++)
             {
-                for (int k = 1; k < (field.GetLength(0) - 1); k++)
+                for (int k = 0; k < (field.GetLength(0) - 1); k++)
                 {
                     if (memorise[i, j, k] == 1)
                     {
-                        Debug.Log("Down");
                         Down(i, j, k);
                         memorise[i, j, k] = 0;
                     }

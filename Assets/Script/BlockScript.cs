@@ -59,7 +59,7 @@ public class BlockScript : MonoBehaviour {
                 TemporaryPosition = transform.position;
 
                 //フィールドの外にブロックがいたら
-                if (TemporaryPosition.x <= 0 || TemporaryPosition.x >= 11 || TemporaryPosition.z <= 0 || TemporaryPosition.z >= 11)
+                if (TemporaryPosition.x <= 0 || TemporaryPosition.x >= 11 || TemporaryPosition.z <= 0 || TemporaryPosition.z >= 11 || TemporaryPosition.y >= 21)
                 {
                     ms.outflag = true;
                 }
