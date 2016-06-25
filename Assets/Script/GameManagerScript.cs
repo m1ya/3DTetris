@@ -14,13 +14,12 @@ public class GameManagerScript : MonoBehaviour
     public static int[,,] field;
     int LineChecker = 0;
 
-    //列削除用オブジェクト
-    public GameObject DeleteCube;
-    public GameObject DownCube;
+    //列表示用オブジェクト
+    public GameObject LineCube;
+    GameObject[,,] cube;
 
-    //列削除用のメモ領域
-    public static int[,,] downmemo;
-    public static int[,,] memorise;
+    //列削除用領域
+    public int[,,] memorise;
     bool deleteflag;
 
     //BGM
@@ -33,35 +32,47 @@ public class GameManagerScript : MonoBehaviour
 
         field = new int[12, 22, 12];
         memorise = new int[12, 22, 12];
-        downmemo = new int[12, 22, 12];
+        cube = new GameObject[12, 22, 12];
 
         deleteflag = false;
 
+        //cubeへGameObjectの代入
+        for (int i = 1; i < field.GetLength(0) - 1; i++)
+        {
+            for (int j = 1; j < field.GetLength(1) - 1; j++)
+            {
+                for (int k = 1; k < field.GetLength(2) - 1; k++)
+                {
+                    cube[i, j, k] = (GameObject)Instantiate(LineCube, new Vector3(i, j, k), transform.rotation);
+                }
+            }
+        }
+
+        //x軸の左右の壁を作る
         for (int i = 0; i < field.GetLength(1); i++)
         {
             for (int j = 0; j < field.GetLength(2); j++)
             {
-                //x軸の左右の壁を作る
                 field[0, i, j] = 2;
                 field[11, i, j] = 2;
             }
         }
 
+        //z軸の前後の壁を作る
         for (int i = 0; i < field.GetLength(0); i++)
         {
             for (int j = 0; j < field.GetLength(1); j++)
             {
-                //z軸の前後の壁を作る
                 field[i, j, 0] = 2;
                 field[i, j, 11] = 2;
             }
         }
 
+        //y軸の床、天井を作る
         for (int i = 0; i < field.GetLength(0); i++)
         {
             for (int j = 0; j < field.GetLength(2); j++)
             {
-                //y軸の床、天井を作る
                 field[i, 0, j] = 2;
                 field[i, 21, j] = 2;
             }
@@ -71,9 +82,33 @@ public class GameManagerScript : MonoBehaviour
 
     void Update()
     {
+        Draw();
+
+        //デバッグ用
         text1.text = field[1, 1, 10].ToString() + " " + field[2, 1, 10].ToString() + " " + field[3, 1, 10].ToString() + " " + field[4, 1, 10].ToString() + " " + field[5, 1, 10].ToString() + " " + field[6, 1, 10].ToString() + " " + field[7, 1, 10].ToString() + " " + field[8, 1, 10].ToString() + " " + field[9, 1, 10].ToString() + " " + field[10, 1, 10].ToString();
         text2.text = field[1, 2, 10].ToString() + " " + field[2, 2, 10].ToString() + " " + field[3, 2, 10].ToString() + " " + field[4, 2, 10].ToString() + " " + field[5, 2, 10].ToString() + " " + field[6, 2, 10].ToString() + " " + field[7, 2, 10].ToString() + " " + field[8, 2, 10].ToString() + " " + field[9, 2, 10].ToString() + " " + field[10, 2, 10].ToString();
         text3.text = field[1, 3, 10].ToString() + " " + field[2, 3, 10].ToString() + " " + field[3, 3, 10].ToString() + " " + field[4, 3, 10].ToString() + " " + field[5, 3, 10].ToString() + " " + field[6, 3, 10].ToString() + " " + field[7, 3, 10].ToString() + " " + field[8, 3, 10].ToString() + " " + field[9, 3, 10].ToString() + " " + field[10, 3, 10].ToString();
+    }
+
+    //cubeを描画する
+    void Draw()
+    {
+        for(int i = 1; i < field.GetLength(0) - 1; i++)
+        {
+            for (int j = 1; j < field.GetLength(1) - 1; j++)
+            {
+                for (int k = 1; k < field.GetLength(2) - 1; k++)
+                {
+                    if(field[i,j,k] == 1)
+                    {
+                        cube[i, j, k].SetActive(true);
+                    }else
+                    {
+                        cube[i, j, k].SetActive(false);
+                    }
+                }
+            }
+        }
     }
 
     //列がそろっているかの判定
@@ -97,7 +132,7 @@ public class GameManagerScript : MonoBehaviour
                     LineChecker += field[i, j, k];
 
                     if (LineChecker == 10)
-                    {            
+                    {
                         memorise[i, j, 0] = 1;
                         deleteflag = true;
                     }
@@ -120,6 +155,7 @@ public class GameManagerScript : MonoBehaviour
                     }
 
                     LineChecker += field[k, j, i];
+
                     if (LineChecker == 10)
                     {
                         memorise[0, j, i] = 1;
@@ -136,40 +172,41 @@ public class GameManagerScript : MonoBehaviour
         }
     }
 
+    //消してから落とす順番を踏む
     void StepDelete()
-    {
-        //列を消す
-        for (int i = 0; i < (field.GetLength(2) - 1); i++)
-        {
-            for (int j = 1; j < field.GetLength(1) - 1; j++)
-            {
-                for (int k = 0; k < (field.GetLength(0) - 1); k++)
-                {
-                    if (memorise[i, j, k] == 1)
-                    {
-                        Delete(i, j, k);
-                        //vanishSource.Play();
-                    }
-                }
-            }
-        }
+{
+    Debug.Log("Search Line");
 
-        //ブロックを下げる
-        for (int i = 0; i < (field.GetLength(2) - 1); i++)
+    for (int i = 0; i < (field.GetLength(2) - 1); i++)
+    {
+        for (int j = 1; j < field.GetLength(1) - 1; j++)
         {
-            for (int j = 1; j < field.GetLength(1) - 1; j++)
+            for (int k = 0; k < (field.GetLength(0) - 1); k++)
             {
-                for (int k = 0; k < (field.GetLength(0) - 1); k++)
+                if (memorise[i, j, k] == 1)
                 {
-                    if (memorise[i, j, k] == 1)
-                    {
-                        Down(i, j, k);
-                        memorise[i, j, k] = 0;
-                    }
+                    Delete(i, j, k);
+                    //vanishSource.Play();
                 }
             }
         }
     }
+
+    for (int i = 0; i < (field.GetLength(2) - 1); i++)
+    {
+        for (int j = 1; j < field.GetLength(1) - 1; j++)
+        {
+            for (int k = 0; k < (field.GetLength(0) - 1); k++)
+            {
+                if (memorise[i, j, k] == 1)
+                {
+                    memorise[i, j, k] = 0;
+                    Down(i, j, k);
+                }
+            }
+        }
+    }
+}
 
     //列がそろったら消える処理
     void Delete(int x, int y, int z)
@@ -180,13 +217,11 @@ public class GameManagerScript : MonoBehaviour
         {
             if (x == 0)
             {
-                Instantiate(DeleteCube, new Vector3(i, y, z), transform.rotation);
                 field[i, y, z] = 0;
             }
 
             if (z == 0)
             {
-                Instantiate(DeleteCube, new Vector3(x, y, i), transform.rotation);
                 field[x, y, i] = 0;
             }
         }
@@ -208,10 +243,7 @@ public class GameManagerScript : MonoBehaviour
                     }else if(j == 20)
                     {
                         field[i, j, z] = 0;
-                    }
-
-                    Instantiate(DownCube, new Vector3(i, j, z), transform.rotation);
-                    
+                    }                    
                   }
 
                  if (z == 0)
@@ -223,9 +255,6 @@ public class GameManagerScript : MonoBehaviour
                     {
                         field[x, j, i] = 0;
                     }
-
-                    Instantiate(DownCube, new Vector3(x, j, i), transform.rotation);
-                    
                  }
             }
         }
