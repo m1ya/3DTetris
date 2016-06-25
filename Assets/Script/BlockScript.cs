@@ -74,14 +74,17 @@ public class BlockScript : MonoBehaviour {
                 Vector3 TemporaryPosition;
                 TemporaryPosition = transform.position;
 
-                //フィールドの外にブロックがいたら
-                if (TemporaryPosition.x <= 0 || TemporaryPosition.x >= 11 || TemporaryPosition.z <= 0 || TemporaryPosition.z >= 11 || TemporaryPosition.y >= 21)
+            //フィールドの外にブロックがいたら
+            if (TemporaryPosition.x <= 0 || TemporaryPosition.x >= 11 || TemporaryPosition.z <= 0 || TemporaryPosition.z >= 11 || TemporaryPosition.y >= 21 || TemporaryPosition.y <= 0)
                 {
                     ms.outflag = true;
-                }
-
+            }else
+            {
                 //現在の座標を格納する。
                 position = transform.position;
+            }
+
+
             }
 
             //一つ左のマスに壁又はブロックがあった場合

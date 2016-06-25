@@ -4,13 +4,7 @@ using System.Collections;
 public class BlockGeneratorScript : MonoBehaviour {
 
     //ブロックの取得
-    public GameObject Block1;
-    public GameObject Block2;
-    public GameObject Block3;
-    public GameObject Block4;
-    public GameObject Block5;
-    public GameObject Block6;
-    public GameObject Block7;
+    public GameObject[] Block;
 
     //一度に二個生まれないように
     public static bool geneflag = true;
@@ -20,7 +14,6 @@ public class BlockGeneratorScript : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-	
 	}
 
     // Update is called once per frame
@@ -31,32 +24,9 @@ public class BlockGeneratorScript : MonoBehaviour {
             geneflag = false;
 
             //ランダムにブロックを生成する
-            random = Random.Range(1, 7);
-            switch (random)
-            {
-                case 1:
-                    Instantiate(Block1, transform.position, transform.rotation);
-                    break;
-                case 2:
-                    Instantiate(Block2, transform.position, transform.rotation);
-                    break;
-                case 3:
-                    Instantiate(Block3, transform.position, transform.rotation);
-                    break;
-                case 4:
-                    Instantiate(Block4, transform.position, transform.rotation);
-                    break;
-                case 5:
-                    Instantiate(Block5, transform.position, transform.rotation);
-                    break;
-                case 6:
-                    Instantiate(Block6, transform.position, transform.rotation);
-                    break;
-                case 7:
-                    Instantiate(Block7, transform.position, transform.rotation);
-                    break;
-            }
+            Instantiate(Block[0], transform.position, transform.rotation);
+            /*Random.Range(0, Block.Length)*/
         }
     }
+    }
 
-}

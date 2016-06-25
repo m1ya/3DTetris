@@ -19,6 +19,7 @@ public class GameManagerScript : MonoBehaviour
     public GameObject DownCube;
 
     //列削除用のメモ領域
+    public static int[,,] downmemo;
     public static int[,,] memorise;
     bool deleteflag;
 
@@ -32,6 +33,7 @@ public class GameManagerScript : MonoBehaviour
 
         field = new int[12, 22, 12];
         memorise = new int[12, 22, 12];
+        downmemo = new int[12, 22, 12];
 
         deleteflag = false;
 
@@ -93,8 +95,9 @@ public class GameManagerScript : MonoBehaviour
                     }
 
                     LineChecker += field[i, j, k];
+
                     if (LineChecker == 10)
-                    {                 
+                    {            
                         memorise[i, j, 0] = 1;
                         deleteflag = true;
                     }
@@ -135,8 +138,7 @@ public class GameManagerScript : MonoBehaviour
 
     void StepDelete()
     {
-        Debug.Log("Search Line");
-
+        //列を消す
         for (int i = 0; i < (field.GetLength(2) - 1); i++)
         {
             for (int j = 1; j < field.GetLength(1) - 1; j++)
@@ -152,6 +154,7 @@ public class GameManagerScript : MonoBehaviour
             }
         }
 
+        //ブロックを下げる
         for (int i = 0; i < (field.GetLength(2) - 1); i++)
         {
             for (int j = 1; j < field.GetLength(1) - 1; j++)
@@ -160,8 +163,8 @@ public class GameManagerScript : MonoBehaviour
                 {
                     if (memorise[i, j, k] == 1)
                     {
-                        memorise[i, j, k] = 0;
                         Down(i, j, k);
+                        memorise[i, j, k] = 0;
                     }
                 }
             }
@@ -178,11 +181,13 @@ public class GameManagerScript : MonoBehaviour
             if (x == 0)
             {
                 Instantiate(DeleteCube, new Vector3(i, y, z), transform.rotation);
+                field[i, y, z] = 0;
             }
 
             if (z == 0)
             {
                 Instantiate(DeleteCube, new Vector3(x, y, i), transform.rotation);
+                field[x, y, i] = 0;
             }
         }
     }
@@ -190,31 +195,40 @@ public class GameManagerScript : MonoBehaviour
     //消えたら一つ下げる処理
     void Down(int x, int y, int z)
     {
+        Debug.Log(x + "," + y + "," + z);
         for (int i = 1; i < 11; i++)
         {
             for (int j = y+1; j < 21; j++)
             {
                  if (x == 0)
                  {
-                    Instantiate(DownCube, new Vector3(i, j, z), transform.rotation);
-                    field[i, j - 1, z] = field[i, j, z];
-                    if(j == 20)
+                    if (j < 20)
+                    {
+                        field[i, j - 1, z] = field[i, j, z];
+                    }else if(j == 20)
                     {
                         field[i, j, z] = 0;
                     }
 
+                    Instantiate(DownCube, new Vector3(i, j, z), transform.rotation);
+                    
                   }
 
                  if (z == 0)
                  {
-                    Instantiate(DownCube, new Vector3(x, j, i), transform.rotation);
-                    field[x, j - 1, i] = field[x, j - 1, i];
-                    if (j == 20)
+                    if (j < 20)
                     {
-                        field[i, j, z] = 0;
+                        field[x, j - 1, i] = field[x, j, i];
+                    }else if(j == 20)
+                    {
+                        field[x, j, i] = 0;
                     }
-                }
+
+                    Instantiate(DownCube, new Vector3(x, j, i), transform.rotation);
+                    
+                 }
             }
         }
     }
+
 }

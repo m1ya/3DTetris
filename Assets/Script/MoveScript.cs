@@ -151,7 +151,7 @@ public class MoveScript : MonoBehaviour {
         //もしフィールド外に出たら
         if (outflag == true)
         {
-            transform.eulerAngles += new Vector3(90, 0, 0);
+            transform.eulerAngles -= new Vector3(90, 0, 0);
             outflag = false;
         }
     }
