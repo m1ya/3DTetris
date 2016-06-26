@@ -14,9 +14,6 @@ public class GameManagerScript : MonoBehaviour
 
     //列削除用領域
     public int[,,] memorise;
-    bool deleteflag;
-    bool downflag;
-    bool isRunning;
 
     //BGM
     public AudioSource bgmSource;
@@ -29,10 +26,6 @@ public class GameManagerScript : MonoBehaviour
         field = new int[12, 22, 12];
         memorise = new int[12, 22, 12];
         cube = new GameObject[12, 22, 12];
-
-        deleteflag = false;
-        downflag = false;
-        isRunning = false;
 
         //cubeへGameObjectの代入
         for (int i = 1; i < field.GetLength(0) - 1; i++)
@@ -105,24 +98,19 @@ public class GameManagerScript : MonoBehaviour
     }
 
     //列がそろっているかの判定
-    IEnumerator LineCheck()
+    void LineCheck()
     {
-        if (isRunning) yield break;
-
-        isRunning = true;
-
         //x軸に列がそろっているかの判定
         for (int i = 1; i < (field.GetLength(0) - 1); i++)
         {
 
             for (int j = 1; j < field.GetLength(1) - 1; j++)
             {
-                LineChecker = 0;
-
                 for (int k = 1; k < (field.GetLength(2) - 1); k++)
                 {
                     if (field[i, j, k] == 0)
                     {
+                        LineChecker = 0;
                         break;
                     }
 
@@ -130,11 +118,11 @@ public class GameManagerScript : MonoBehaviour
 
                     if (LineChecker == 10)
                     {
+                        Debug.Log("Down");
                         Down(i,j,0);
-                        isRunning = false;
-                        yield break;
+                        j--;
+                        LineChecker = 0;
                     }
-
                 }
             }
         }
@@ -144,12 +132,11 @@ public class GameManagerScript : MonoBehaviour
         {
             for (int j = 1; j < field.GetLength(1) - 1; j++)
             {
-                LineChecker = 0;
-
                 for (int k = 1; k < (field.GetLength(0) - 1); k++)
                 {
                     if (field[k, j, i] == 0)
                     {
+                        LineChecker = 0;
                         break;
                     }
 
@@ -157,19 +144,14 @@ public class GameManagerScript : MonoBehaviour
 
                     if (LineChecker == 10)
                     {
+                        Debug.Log("Down");
                         Down(0, j, i);
-                        isRunning = false;
-                        yield break;
+                        j--;
+                        LineChecker = 0;
                     }
                 }
             }
         }
-        isRunning = false;
-    }
-
-    void Line()
-    {
-        StartCoroutine("LineCheck");
     }
 
     //消えたら一つ下げる処理
@@ -178,7 +160,7 @@ public class GameManagerScript : MonoBehaviour
         Debug.Log(x + "," + y + "," + z);
         for (int i = 1; i < 11; i++)
         {
-            for (int j = y+1; j < 21; j++)
+            for (int j = y; j < 21; j++)
             {
                  if (x == 0)
                  {
@@ -203,7 +185,5 @@ public class GameManagerScript : MonoBehaviour
                  }
             }
         }
-
-        Line();
     }
 }
