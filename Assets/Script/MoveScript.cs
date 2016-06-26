@@ -144,7 +144,7 @@ public class MoveScript : MonoBehaviour {
                 Destroy(this.gameObject);
 
                 //揃っている列がないかチェックする
-                gamemanager.SendMessage("LineCheck");
+                gamemanager.SendMessage("Line");
             }
         }
     }
