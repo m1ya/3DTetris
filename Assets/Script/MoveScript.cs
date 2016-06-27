@@ -140,9 +140,13 @@ public class MoveScript : MonoBehaviour {
                 //揃っている列がないかチェックする
                 gamemanager.SendMessage("LineCheck");
 
-                //次のブロックを生成する
-                geneflag = true;
-                BlockGeneratorScript.geneflag = true;
+                //ゲームオーバーしていなければ
+                if (GameManagerScript.gameoverflag == false)
+                {
+                    //次のブロックを生成する
+                    geneflag = true;
+                    BlockGeneratorScript.geneflag = true;
+                }
 
                 //オブジェクトを消す
                 Destroy(this.gameObject);

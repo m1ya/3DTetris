@@ -7,14 +7,15 @@ public class BlockGeneratorScript : MonoBehaviour {
     public GameObject[] Block;
 
     //一度に二個生まれないように
-    public static bool geneflag = true;
+    public static bool geneflag;
 
     //ブロックをランダムに生成するための変数
     int random;
 
     // Use this for initialization
     void Start () {
-	}
+        geneflag = true;
+    }
 
     // Update is called once per frame
     void Update() {
@@ -24,7 +25,7 @@ public class BlockGeneratorScript : MonoBehaviour {
             geneflag = false;
 
             //ランダムにブロックを生成する
-            Instantiate(Block[0], transform.position, transform.rotation);
+            Instantiate(Block[1], transform.position, transform.rotation);
             /*Random.Range(0, Block.Length)*/
         }
     }

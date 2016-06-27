@@ -83,8 +83,6 @@ public class BlockScript : MonoBehaviour {
                 //現在の座標を格納する。
                 position = transform.position;
             }
-
-
             }
 
             //一つ左のマスに壁又はブロックがあった場合

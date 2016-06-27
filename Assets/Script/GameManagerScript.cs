@@ -1,12 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManagerScript : MonoBehaviour
 {
    //壁を2、止まっているブロックを1として配列で座標を管理する
     public static int[,,] field;
-    int LineChecker = 0;
+    int LineChecker;
+
+    //GameOverの処理領域
+    public Text GameOverText;
+    public static bool gameoverflag;
 
     //列表示用オブジェクト
     public GameObject LineCube;
@@ -22,6 +27,8 @@ public class GameManagerScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        gameoverflag = false;
+        LineChecker = 0;
 
         field = new int[12, 22, 12];
         memorise = new int[12, 22, 12];
@@ -74,6 +81,14 @@ public class GameManagerScript : MonoBehaviour
     void Update()
     {
         Draw();
+
+        if(gameoverflag == true)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                SceneManager.LoadScene("Main");
+            }
+        }
     }
 
     //cubeを描画する
@@ -118,7 +133,6 @@ public class GameManagerScript : MonoBehaviour
 
                     if (LineChecker == 10)
                     {
-                        Debug.Log("Down");
                         Down(i,j,0);
                         j--;
                         LineChecker = 0;
@@ -144,7 +158,6 @@ public class GameManagerScript : MonoBehaviour
 
                     if (LineChecker == 10)
                     {
-                        Debug.Log("Down");
                         Down(0, j, i);
                         j--;
                         LineChecker = 0;
@@ -152,12 +165,14 @@ public class GameManagerScript : MonoBehaviour
                 }
             }
         }
+
+        //ゲームオーバーしていないかの確認
+        Gameover();
     }
 
     //消えたら一つ下げる処理
     void Down(int x, int y, int z)
     {
-        Debug.Log(x + "," + y + "," + z);
         for (int i = 1; i < 11; i++)
         {
             for (int j = y; j < 21; j++)
@@ -177,12 +192,37 @@ public class GameManagerScript : MonoBehaviour
                  {
                     if (j < 20)
                     {
-                        field[x, j + 1, i] = field[x, j + 1, i];
+                        field[x, j, i] = field[x, j + 1, i];
                     }else if(j == 20)
                     {
                         field[x, j, i] = 0;
                     }
                  }
+            }
+        }
+    }
+
+    //ゲームオーバーの判定
+    void Gameover()
+    {
+        if (field[5, 17, 5] == 1)
+        {
+            GameOverText.text = "GameOver Retry to put Space";
+            gameoverflag = true;
+        }
+
+        for (int i = 4; i <= 6; i++)
+        {
+            for (int j = 18; j <= 20; j++)
+            {
+                for (int k = 4; k <= 6; k++)
+                {
+                    if (field[i, j, k] == 1)
+                    {
+                        GameOverText.text = "GameOver Retry to put Space";
+                        gameoverflag = true;
+                    }
+                }
             }
         }
     }
