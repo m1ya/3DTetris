@@ -3,6 +3,12 @@ using System.Collections;
 
 public class MoveScript : MonoBehaviour {
 
+    //BGM
+    public AudioSource dropSource;
+    public AudioSource moveSource;
+    public AudioSource spinSource;
+    public AudioSource banSource;
+
     //床や壁、ブロックに接触したかの判定
     public bool downflag;
     public int rightflag;
@@ -81,7 +87,11 @@ public class MoveScript : MonoBehaviour {
                 //左側に何もなければ
                 if (leftflag == 0)
                 {
+                    moveSource.Play();
                     transform.position += Vector3.left;
+                }else
+                {
+                    banSource.Play();
                 }
             }
 
@@ -90,7 +100,12 @@ public class MoveScript : MonoBehaviour {
                 //右側に何もなければ
                 if (rightflag == 0)
                 {
+                    moveSource.Play();
                     transform.position += Vector3.right;
+                }
+                else
+                {
+                    banSource.Play();
                 }
             }
 
@@ -99,7 +114,12 @@ public class MoveScript : MonoBehaviour {
                 //前側に何もなければ
                 if (forwardflag == 0)
                 {
+                    moveSource.Play();
                     transform.position += Vector3.forward;
+                }
+                else
+                {
+                    banSource.Play();
                 }
             }
 
@@ -108,7 +128,12 @@ public class MoveScript : MonoBehaviour {
                 //後側に何もなければ
                 if (backflag == 0)
                 {
+                    moveSource.Play();
                     transform.position += Vector3.back;
+                }
+                else
+                {
+                    banSource.Play();
                 }
             }
 
@@ -116,18 +141,21 @@ public class MoveScript : MonoBehaviour {
 
             if (Input.GetKeyDown(KeyCode.Z))
             {
+                spinSource.Play();
                 transform.eulerAngles += new Vector3(0, 90, 0);
                 Invoke("reZ", 0.001f);
             }
 
             if (Input.GetKeyDown(KeyCode.X))
             {
+                spinSource.Play();
                 transform.eulerAngles += new Vector3(90, 0, 0);
                 Invoke("reX", 0.001f);
             }
 
             if (Input.GetKeyDown(KeyCode.Y))
             {
+                spinSource.Play();
                 transform.eulerAngles += new Vector3(0, 0, 90);
                 Invoke("reY", 0.001f);
             }
@@ -137,6 +165,7 @@ public class MoveScript : MonoBehaviour {
         {
             if (posflag == 0)
             {
+
                 //揃っている列がないかチェックする
                 gamemanager.SendMessage("LineCheck");
 
@@ -147,6 +176,8 @@ public class MoveScript : MonoBehaviour {
                     geneflag = true;
                     BlockGeneratorScript.geneflag = true;
                 }
+
+                dropSource.Play();
 
                 //オブジェクトを消す
                 Destroy(this.gameObject);
@@ -159,6 +190,7 @@ public class MoveScript : MonoBehaviour {
         //もしフィールド外に出たら
         if (outflag == true)
         {
+            banSource.Play();
             transform.eulerAngles -= new Vector3(90, 0, 0);
             outflag = false;
         }
@@ -169,6 +201,7 @@ public class MoveScript : MonoBehaviour {
         //もしフィールド外に出たら
         if (outflag == true)
         {
+            banSource.Play();
             transform.eulerAngles -= new Vector3(0, 90, 0);
             outflag = false;
         }
@@ -179,6 +212,7 @@ public class MoveScript : MonoBehaviour {
         //もしフィールド外に出たら
         if (outflag == true)
         {
+            banSource.Play();
             transform.eulerAngles -= new Vector3(0, 0, 90);
             outflag = false;
         }

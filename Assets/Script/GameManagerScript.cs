@@ -19,16 +19,19 @@ public class GameManagerScript : MonoBehaviour
 
     //列削除用領域
     public int[,,] memorise;
+    bool vanish;
 
     //BGM
     public AudioSource bgmSource;
     public AudioSource vanishSource;
+    public AudioSource gameoverSource;
 
     // Use this for initialization
     void Start()
     {
         gameoverflag = false;
         LineChecker = 0;
+        vanish = false;
 
         field = new int[12, 22, 12];
         memorise = new int[12, 22, 12];
@@ -134,6 +137,11 @@ public class GameManagerScript : MonoBehaviour
                     if (LineChecker == 10)
                     {
                         Down(i,j,0);
+                        if(vanish == false)
+                        {
+                            vanishSource.Play();
+                            vanish = true;
+                        }
                         j--;
                         LineChecker = 0;
                     }
@@ -159,13 +167,18 @@ public class GameManagerScript : MonoBehaviour
                     if (LineChecker == 10)
                     {
                         Down(0, j, i);
+                        if (vanish == false)
+                        {
+                            vanishSource.Play();
+                            vanish = true;
+                        }
                         j--;
                         LineChecker = 0;
                     }
                 }
             }
         }
-
+        vanish = false;
         //ゲームオーバーしていないかの確認
         Gameover();
     }
@@ -209,6 +222,9 @@ public class GameManagerScript : MonoBehaviour
         {
             GameOverText.text = "GameOver Retry to put Space";
             gameoverflag = true;
+            bgmSource.Stop();
+            gameoverSource.Play();
+
         }
 
         for (int i = 4; i <= 6; i++)
@@ -221,6 +237,8 @@ public class GameManagerScript : MonoBehaviour
                     {
                         GameOverText.text = "GameOver Retry to put Space";
                         gameoverflag = true;
+                        bgmSource.Stop();
+                        gameoverSource.Play();
                     }
                 }
             }
