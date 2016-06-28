@@ -9,6 +9,9 @@ public class MoveScript : MonoBehaviour {
     public AudioSource spinSource;
     public AudioSource banSource;
 
+    //scoreの管理
+    public int score;
+
     //床や壁、ブロックに接触したかの判定
     public bool downflag;
     public int rightflag;
@@ -37,6 +40,9 @@ public class MoveScript : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+
+        //Scoreの初期化
+        score = 0;
 
         //接触フラグの初期化
         downflag = false;
@@ -138,7 +144,7 @@ public class MoveScript : MonoBehaviour {
             }
 
             //ブロックの回転処理
-
+ 
             if (Input.GetKeyDown(KeyCode.Z))
             {
                 spinSource.Play();
@@ -165,6 +171,8 @@ public class MoveScript : MonoBehaviour {
         {
             if (posflag == 0)
             {
+                //Scoreの計算
+                GameManagerScript.Score += score;
 
                 //揃っている列がないかチェックする
                 gamemanager.SendMessage("LineCheck");

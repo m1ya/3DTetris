@@ -55,6 +55,7 @@ public class BlockScript : MonoBehaviour {
         if (posflag == false)
         {
             ms.posflag++;
+            ms.score+= 10;
             posflag = true;
         }
 
@@ -170,6 +171,7 @@ public class BlockScript : MonoBehaviour {
                 GameManagerScript.field[Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.y), Mathf.RoundToInt(position.z)] = 1;
                 positionflag = true;
                 ms.posflag--;
+                
             }
         }
         else

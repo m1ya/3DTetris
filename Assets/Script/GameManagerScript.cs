@@ -9,6 +9,15 @@ public class GameManagerScript : MonoBehaviour
     public static int[,,] field;
     int LineChecker;
 
+    //Scoreの管理
+    public static int Score;
+    public Text ScoreText;
+    public Text CombText;
+    int SameTimeVanish;
+    int Comb;
+    bool CombFlag;
+    bool vanishflag;
+
     //GameOverの処理領域
     public Text GameOverText;
     public static bool gameoverflag;
@@ -32,6 +41,9 @@ public class GameManagerScript : MonoBehaviour
         gameoverflag = false;
         LineChecker = 0;
         vanish = false;
+        SameTimeVanish = 0;
+        CombFlag = false;
+        vanishflag = false;
 
         field = new int[12, 22, 12];
         memorise = new int[12, 22, 12];
@@ -92,6 +104,9 @@ public class GameManagerScript : MonoBehaviour
                 SceneManager.LoadScene("Main");
             }
         }
+
+        //Scoreの表示
+        ScoreText.text = "SCORE : " + Score.ToString();
     }
 
     //cubeを描画する
@@ -121,7 +136,6 @@ public class GameManagerScript : MonoBehaviour
         //x軸に列がそろっているかの判定
         for (int i = 1; i < (field.GetLength(0) - 1); i++)
         {
-
             for (int j = 1; j < field.GetLength(1) - 1; j++)
             {
                 for (int k = 1; k < (field.GetLength(2) - 1); k++)
@@ -136,7 +150,14 @@ public class GameManagerScript : MonoBehaviour
 
                     if (LineChecker == 10)
                     {
+                        vanishflag = true;
+                        SameTimeVanish++;
                         Down(i,j,0);
+                        if(CombFlag == false)
+                        {
+                            Comb++;
+                            CombFlag = true;
+                        }
                         if(vanish == false)
                         {
                             vanishSource.Play();
@@ -166,7 +187,14 @@ public class GameManagerScript : MonoBehaviour
 
                     if (LineChecker == 10)
                     {
+                        vanishflag = true;
+                        SameTimeVanish++;
                         Down(0, j, i);
+                        if (CombFlag == false)
+                        {
+                            Comb++;
+                            CombFlag = true;
+                        }
                         if (vanish == false)
                         {
                             vanishSource.Play();
@@ -179,6 +207,23 @@ public class GameManagerScript : MonoBehaviour
             }
         }
         vanish = false;
+        CombFlag = false;
+        
+        if(vanishflag == false)
+        {
+            CombText.text = "";
+            Comb = 0;
+        }else
+        {
+            CombText.text = Comb.ToString() + " Comb";
+            vanishflag = false;
+        }
+
+        //Scoreの計算
+        Score += 100 * SameTimeVanish * SameTimeVanish;
+        Score += 100 * Comb * Comb;
+        SameTimeVanish = 0;
+
         //ゲームオーバーしていないかの確認
         Gameover();
     }

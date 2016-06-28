@@ -25,7 +25,7 @@ public class BlockGeneratorScript : MonoBehaviour {
             geneflag = false;
 
             //ランダムにブロックを生成する
-            Instantiate(Block[1], transform.position, transform.rotation);
+            Instantiate(Block[Random.Range(0, Block.Length)], transform.position, transform.rotation);
             /*Random.Range(0, Block.Length)*/
         }
     }
