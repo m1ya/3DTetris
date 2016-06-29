@@ -18,4 +18,9 @@ public class StartScript : MonoBehaviour {
         }
 
     }
+
+    void Help()
+    {
+        SceneManager.LoadScene("Help");
+    }
 }
