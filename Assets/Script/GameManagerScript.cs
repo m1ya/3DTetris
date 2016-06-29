@@ -20,7 +20,9 @@ public class GameManagerScript : MonoBehaviour
 
     //GameOverの処理領域
     public Text GameOverText;
+    public Text RetryText;
     public static bool gameoverflag;
+    GameObject TweetButton;
 
     //列表示用オブジェクト
     public GameObject LineCube;
@@ -38,6 +40,12 @@ public class GameManagerScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        TweetButton = GameObject.Find("TweetButton");
+        TweetButton.SetActive(false);
+
+        GameOverText.text = "";
+        RetryText.text = "";
+
         gameoverflag = false;
         LineChecker = 0;
         vanish = false;
@@ -265,10 +273,12 @@ public class GameManagerScript : MonoBehaviour
     {
         if (field[5, 17, 5] == 1)
         {
-            GameOverText.text = "GameOver Retry to put Space";
+            GameOverText.text = "GameOver";
+            RetryText.text = "Retry to press Space";
             gameoverflag = true;
             bgmSource.Stop();
             gameoverSource.Play();
+            TweetButton.SetActive(true);
 
         }
 
@@ -280,13 +290,21 @@ public class GameManagerScript : MonoBehaviour
                 {
                     if (field[i, j, k] == 1)
                     {
-                        GameOverText.text = "GameOver Retry to put Space";
+                        GameOverText.text = "GameOver";
+                        RetryText.text = "Retry to press Space";
                         gameoverflag = true;
                         bgmSource.Stop();
                         gameoverSource.Play();
+                        TweetButton.SetActive(true);
                     }
                 }
             }
         }
+    }
+
+    void Tweet()
+    {
+        string tweet = "私のスコアは" + Score + "でした！ #3DTetris_Rinaya";
+        Application.ExternalEval(string.Format("window.open('{0}','_blank')", "http://twitter.com/intent/tweet?text=" + WWW.EscapeURL(tweet)));
     }
 }
