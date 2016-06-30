@@ -305,7 +305,7 @@ public class GameManagerScript : MonoBehaviour
 
     void Tweet()
     {
-        string tweet = "私のスコアは" + Score + "でした！ #3DTetris_Rinaya";
+        string tweet = "私のスコアは" + Score + "でした！ https://unityroom.com/games/3dtetris #3DTetris_Rinaya";
         Application.ExternalEval(string.Format("window.open('{0}','_blank')", "http://twitter.com/intent/tweet?text=" + WWW.EscapeURL(tweet)));
     }
 }
