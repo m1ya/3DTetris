@@ -46,6 +46,7 @@ public class GameManagerScript : MonoBehaviour
         GameOverText.text = "";
         RetryText.text = "";
 
+        Score = 0;
         gameoverflag = false;
         LineChecker = 0;
         vanish = false;
