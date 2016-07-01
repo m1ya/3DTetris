@@ -2,7 +2,8 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 
-public class HelpScript : MonoBehaviour {
+public class HelpScript : MonoBehaviour
+{
 
 	// Use this for initialization
 	void Start () {
@@ -18,4 +19,6 @@ public class HelpScript : MonoBehaviour {
     {
         SceneManager.LoadScene("Start");
     }
+
+
 }

@@ -10,7 +10,7 @@ public class NextBlockScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (GameManagerScript.gameoverflag == false)
+        if (GameManagerScript.gameoverflag == false && GameManagerScript.HelpStop == false)
         {
             transform.eulerAngles += new Vector3(0, 0.2f, 0);
         }

@@ -68,7 +68,7 @@ public class MoveScript : MonoBehaviour {
 	void Update () {
 
         //床orブロックの上に接触していなければ
-        if (downflag == false)
+        if (downflag == false && GameManagerScript.HelpStop == false)
         {
             //Blockの落下処理
             timekeeper += Time.deltaTime;
@@ -79,7 +79,7 @@ public class MoveScript : MonoBehaviour {
             }
         }
 
-        if(stopflag == false) {
+        if (stopflag == false && GameManagerScript.HelpStop == false) {
 
             //Blockの操作処理
 

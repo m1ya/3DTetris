@@ -5,7 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class GameManagerScript : MonoBehaviour
 {
-   //壁を2、止まっているブロックを1として配列で座標を管理する
+    //ヘルプの管理
+    public GameObject Help;
+    public static bool HelpStop;
+
+    //壁を2、止まっているブロックを1として配列で座標を管理する
     public static int[,,] field;
     int LineChecker;
 
@@ -19,10 +23,8 @@ public class GameManagerScript : MonoBehaviour
     bool vanishflag;
 
     //GameOverの処理領域
-    public Text GameOverText;
-    public Text RetryText;
+    public GameObject GameoverCanvas;
     public static bool gameoverflag;
-    GameObject TweetButton;
 
     //列表示用オブジェクト
     public GameObject LineCube;
@@ -40,11 +42,9 @@ public class GameManagerScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        TweetButton = GameObject.Find("TweetButton");
-        TweetButton.SetActive(false);
-
-        GameOverText.text = "";
-        RetryText.text = "";
+        Help.SetActive(false);
+        GameoverCanvas.SetActive(false);
+        HelpStop = false;
 
         Score = 0;
         gameoverflag = false;
@@ -274,12 +274,11 @@ public class GameManagerScript : MonoBehaviour
     {
         if (field[5, 17, 5] == 1)
         {
-            GameOverText.text = "GameOver";
-            RetryText.text = "Retry to press Space";
+            GameoverCanvas.SetActive(true);
             gameoverflag = true;
             bgmSource.Stop();
             gameoverSource.Play();
-            TweetButton.SetActive(true);
+
 
         }
 
@@ -291,12 +290,10 @@ public class GameManagerScript : MonoBehaviour
                 {
                     if (field[i, j, k] == 1)
                     {
-                        GameOverText.text = "GameOver";
-                        RetryText.text = "Retry to press Space";
+                        GameoverCanvas.SetActive(true);
                         gameoverflag = true;
                         bgmSource.Stop();
                         gameoverSource.Play();
-                        TweetButton.SetActive(true);
                     }
                 }
             }
@@ -307,5 +304,17 @@ public class GameManagerScript : MonoBehaviour
     {
         string tweet = "私のスコアは" + Score + "でした！ https://unityroom.com/games/3dtetris #3DTetris_Rinaya";
         Application.ExternalEval(string.Format("window.open('{0}','_blank')", "http://twitter.com/intent/tweet?text=" + WWW.EscapeURL(tweet)));
+    }
+
+    void HelpButton()
+    {
+        Help.SetActive(true);
+        HelpStop = true;
+    }
+
+    void HelpBack()
+    {
+        Help.SetActive(false);
+        HelpStop = false;
     }
 }
